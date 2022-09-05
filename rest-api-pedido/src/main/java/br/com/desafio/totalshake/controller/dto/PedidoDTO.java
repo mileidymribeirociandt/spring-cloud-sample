@@ -22,7 +22,6 @@ public class PedidoDTO {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonProperty("data_hora")
-//    @JsonFormat
     private LocalDateTime dataHora;
 
     @NotNull

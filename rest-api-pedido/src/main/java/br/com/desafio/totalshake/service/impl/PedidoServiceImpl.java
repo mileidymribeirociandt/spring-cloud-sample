@@ -2,6 +2,7 @@ package br.com.desafio.totalshake.service.impl;
 
 import br.com.desafio.totalshake.controller.dto.ItemPedidoDTO;
 import br.com.desafio.totalshake.controller.dto.PedidoDTO;
+import br.com.desafio.totalshake.controller.dto.StatusDTO;
 import br.com.desafio.totalshake.domain.entity.Pedido;
 import br.com.desafio.totalshake.domain.repository.PedidoRepository;
 import br.com.desafio.totalshake.service.ItemPedidoService;
@@ -31,6 +32,10 @@ public class PedidoServiceImpl implements PedidoService {
 
     @Override
     public void deleteById(Long id) {
+        verifyId(id);
+        if(!pedidoRepository.existsById(id)){
+            throw new PedidoNotFoundException("Pedido not found!");
+        }
         pedidoRepository.deleteById(id);
     }
 
@@ -46,10 +51,23 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     @Transactional
     public PedidoDTO update(PedidoDTO pedidoDTO, Long id) {
+        verifyId(id);
+        if(!pedidoRepository.existsById(id)){
+            throw new PedidoNotFoundException("Pedido not found!");
+        }
         verifyPedidoDTO(pedidoDTO);
         Pedido updatedPedido = pedidoRepository.save(Mapper.toPedido(pedidoDTO, id));
         List<ItemPedidoDTO> updatedItemPedidoDTOList = itemPedidoService.updateAll(pedidoDTO.getItensPedidoList(), id);
         return Mapper.toPedidoDTO(updatedPedido, updatedItemPedidoDTOList);
+    }
+
+    @Override
+    public void updatePedidoStatus(StatusDTO statusDTO, Long id) {
+        verifyId(id);
+        if(!pedidoRepository.existsById(id)){
+            throw new PedidoNotFoundException("Pedido not found!");
+        }
+        pedidoRepository.updatePedidoStatus(id, statusDTO.getStatus().name());
     }
 
     @Override

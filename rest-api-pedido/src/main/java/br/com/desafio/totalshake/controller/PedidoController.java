@@ -1,6 +1,7 @@
 package br.com.desafio.totalshake.controller;
 
 import br.com.desafio.totalshake.controller.dto.PedidoDTO;
+import br.com.desafio.totalshake.controller.dto.StatusDTO;
 import br.com.desafio.totalshake.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
@@ -44,6 +45,12 @@ public class PedidoController {
     @PutMapping("/pedido/{id}")
     public ResponseEntity<PedidoDTO> updatePedido(@PathVariable(required = true) Long id, @RequestBody @Valid PedidoDTO pedidoDTO){
         return ResponseEntity.ok(pedidoService.update(pedidoDTO, id));
+    }
+
+    @PutMapping("/pedido/{id}/status")
+    public ResponseEntity<String> updatePedidoStatus(@PathVariable(required = true) Long id, @RequestBody @Valid StatusDTO statusDTO){
+        pedidoService.updatePedidoStatus(statusDTO, id);
+        return new ResponseEntity<>("Status do pedido atualizado!", HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/pedido/{id}/delete")
